@@ -19,7 +19,6 @@ def create_book_v2(
     db: Session = Depends(database.get_db),
     current_user = Depends(get_current_user)
 ):
-    # Тот же crud, но с genre
     db_book = crud.create_book_v2(db, book)
     return db_book
 

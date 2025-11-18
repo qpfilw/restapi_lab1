@@ -20,10 +20,8 @@ app = FastAPI(
 app.state.limiter = limiter
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# Создаём таблицы при старте
 models.Base.metadata.create_all(bind=database.engine)
 
-# Монтируем версии
 api_v1 = FastAPI(title="v1")
 api_v2 = FastAPI(title="v2")
 
@@ -35,13 +33,11 @@ api_v2.include_router(v2_books_router, prefix="/books")
 app.mount("/api/v1", api_v1)
 app.mount("/api/v2", api_v2)
 
-# === РЕГИСТРАЦИЯ И ЛОГИН — РАБОЧИЕ! ===
 @app.post("/register")
 def register(
     user: schemas.UserCreate,
     db: Session = Depends(database.get_db)
 ):
-    # Проверка на дубликат email
     if db.query(models.User).filter(models.User.email == user.email).first():
         raise HTTPException(400, "Email already registered")
 

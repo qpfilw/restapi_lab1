@@ -37,7 +37,6 @@ async def create_book(
     current_user = Depends(get_current_user),
     idempotency_key: Optional[str] = Header(None, alias="Idempotency-Key")
 ):
-    # Идемпотентность
     if idempotency_key and idempotency_key in IDEMPOTENCY_STORE:
         stored = IDEMPOTENCY_STORE[idempotency_key]
         response.status_code = 200

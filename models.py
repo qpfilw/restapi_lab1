@@ -9,7 +9,7 @@ class User(Base):
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     name = Column(String)
-    role = Column(String, default="user")  # user / librarian / admin
+    role = Column(String, default="user")
 
     borrows = relationship("Borrow", back_populates="user")
 
@@ -21,7 +21,7 @@ class Book(Base):
     isbn = Column(String, unique=True, index=True)
     year = Column(Integer)
     available = Column(Boolean, default=True)
-    genre = Column(String, nullable=True)  # будет в v2
+    genre = Column(String, nullable=True)
 
     borrows = relationship("Borrow", back_populates="book")
 

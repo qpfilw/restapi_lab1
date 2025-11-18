@@ -11,7 +11,6 @@ from utils.limiter import limiter
 
 router = APIRouter(prefix="/users", tags=["v1 - Users"])
 
-# Получить всех пользователей (только админ)
 @router.get("/", response_model=List[schemas.User])
 @limiter.limit("10/minute")
 def read_users(
@@ -24,12 +23,10 @@ def read_users(
     users = db.query(models.User).all()
     return users
 
-# Получить текущего пользователя
 @router.get("/me", response_model=schemas.User)
 def read_current_user(current_user = Depends(get_current_user)):
     return current_user
 
-# Получить одного пользователя по ID (админ или он сам)
 @router.get("/{user_id}", response_model=schemas.User)
 def read_user(
     user_id: int,

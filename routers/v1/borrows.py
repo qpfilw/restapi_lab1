@@ -12,7 +12,6 @@ from utils.limiter import limiter
 
 router = APIRouter(prefix="/borrows", tags=["v1 - Borrows"])
 
-# Взять книгу (создать запись о выдаче)
 @router.post("/", response_model=schemas.Borrow, status_code=201)
 @limiter.limit("5/minute")
 def borrow_book(
@@ -27,7 +26,6 @@ def borrow_book(
     if not book.available:
         raise HTTPException(400, "Book is already borrowed")
 
-    # Создаём запись
     db_borrow = models.Borrow(book_id=borrow.book_id, user_id=current_user.id)
     book.available = False
     db.add(db_borrow)
@@ -35,7 +33,6 @@ def borrow_book(
     db.refresh(db_borrow)
     return db_borrow
 
-# Вернуть книгу
 @router.patch("/{borrow_id}/return", response_model=schemas.Borrow)
 def return_book(
     borrow_id: int,
@@ -59,7 +56,6 @@ def return_book(
     db.refresh(borrow)
     return borrow
 
-# Мои текущие книги
 @router.get("/my", response_model=List[schemas.Borrow])
 def my_borrows(
     db: Session = Depends(database.get_db),
@@ -71,7 +67,6 @@ def my_borrows(
     ).all()
     return borrows
 
-# Все выдачи (для библиотекаря/админа)
 @router.get("/", response_model=List[schemas.Borrow])
 @limiter.limit("10/minute")
 def all_borrows(

@@ -14,12 +14,11 @@ class BookCreate(BookBase):
 class Book(BookBase):
     id: int
     available: bool
-    genre: Optional[str] = None  # присутствует в v2
+    genre: Optional[str] = None
 
     class Config:
         from_attributes = True
 
-# v2 — новое поле обязательно при создании
 class BookCreateV2(BookBase):
     genre: str
 
